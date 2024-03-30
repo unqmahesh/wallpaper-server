@@ -11,7 +11,8 @@ const addNewImg = async (req, res, next) => {
 
         const {createdBy, aspectRatio, keyWords, height, width} = req.body
 
-        const response = await cdUploadImg
+        const response = await cdUploadImg()
+
 
         const url = response.url || null  
         const publicId = response.public_id || null
