@@ -24,15 +24,15 @@ const addExistingImg = async (req, res, next) => {
         const publicId = response.data.data.public_id
 
         const imgData = {
-            imageResolutions : [{
                 url,
                 publicId,
                 height, 
-                width,
-            }]
+                width
         }
         
-        const updatedData = await ImageModel.findOneAndUpdate({imageId}, imgData, {new : true})
+        const updatedData = await ImageModel.findOneAndUpdate(
+            {imageId},
+            {$push : {imageResolutions : imgData}}, {new : true})
 
         res.status(200).json({success : true, data : updatedData})
 

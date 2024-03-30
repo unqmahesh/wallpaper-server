@@ -1,16 +1,20 @@
 import ImageModel from '../../schema/img-schema.js'
 import cdUploadImg from '../../services/cloud-upload-img.js'
 
+import { imageName } from '../../config/multer-config.js'
+
+import fs from 'fs'
+
 const addNewImg = async (req, res, next) => {
 
     try{
 
-        const {base64Img, createdBy, aspectRatio, keyWords, height, width} = req.body
+        const {createdBy, aspectRatio, keyWords, height, width} = req.body
 
-        const response = await cdUploadImg(base64Img)
+        const response = await cdUploadImg
 
-        const url = response.data.data.url
-        const publicId = response.data.data.public_id
+        const url = response.url || null  
+        const publicId = response.public_id || null
 
         const imgData = {
             aspectRatio,
@@ -25,6 +29,8 @@ const addNewImg = async (req, res, next) => {
         }
         
         const createdData = await ImageModel.create(imgData)
+
+        fs.unlinkSync(`uploads/${imageName}`)
 
         res.status(200).json({success : true, data : createdData})
 

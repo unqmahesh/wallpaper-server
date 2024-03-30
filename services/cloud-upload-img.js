@@ -2,7 +2,9 @@ import { v2 } from "cloudinary";
 import crypto from 'crypto'
 import fs from 'fs'
 
-const cdUploadImg = async(base64Img, next) => {
+import { imageName } from "../config/multer-config.js";
+
+const cdUploadImg = async() => {
     try{
 
         v2.config({
@@ -12,11 +14,13 @@ const cdUploadImg = async(base64Img, next) => {
         secure: true,
         });
         
-        const imageBuffer = Buffer.from(base64Img, 'base64')
 
         const uniqueId = crypto.randomUUID()
 
-        const imgFilePath = `images/${uniqueId}.png`
+        const imageFormat = imageName.split(".")[1]
+        const imgFilePath = `images/${uniqueId}.${imageFormat}`
+        const imageData = fs.readFileSync(`uploads/${imageName}`)
+        const imageBuffer = Buffer.from(imageData)
 
         fs.writeFileSync(imgFilePath, imageBuffer)
         
@@ -28,7 +32,7 @@ const cdUploadImg = async(base64Img, next) => {
           };
         
         const response = await v2.uploader.upload(imgFilePath, options)
-
+        
         fs.unlinkSync(imgFilePath)
 
         return response
@@ -39,7 +43,7 @@ const cdUploadImg = async(base64Img, next) => {
        err.message = error.message || "unable to upload the image to the cloud"
        err.status = 500
 
-       next(err)
+       throw err
     }   
 }
 
