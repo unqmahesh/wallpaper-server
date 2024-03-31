@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-import errHandler from "../middlewares/err-handler.js";
-
 const connectDB = async() => {
     try{
 
@@ -11,7 +9,8 @@ const connectDB = async() => {
 
     }catch(error){
         const err = new Error(error.message || 'Failed to connect to database')
-        errHandler(err)
+        
+        throw err
     }
 }
 

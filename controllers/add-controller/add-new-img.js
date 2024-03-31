@@ -16,11 +16,12 @@ const addNewImg = async (req, res, next) => {
 
         const url = response.url || null  
         const publicId = response.public_id || null
-
+        
+        
         const imgData = {
             aspectRatio,
             createdBy,
-            keyWords,
+            keyWords : keyWords.split(","),
             imageResolutions : [{
                 url,
                 publicId,
