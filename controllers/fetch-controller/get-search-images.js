@@ -12,7 +12,7 @@ const getSearchedImgs = async (req, res, next) => {
         if(searchedWords){
 
             imageData = await ImageModel.find({
-                'keyWords' : {$in : searchedWords},
+                'keyWords' : {$in : searchedWords.map(word => new RegExp(word, 'i'))},
                 'aspectRatio' : aspectRatio
             }).skip(offset).limit(limit)
         }
