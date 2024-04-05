@@ -16,7 +16,7 @@ indexRouter.route('/get-all-imgs').post(getAllImages)
 indexRouter.route('/get-searched-imgs').post(getSearchedImgs)
 
 indexRouter.route('/add-new-img').post(upload.single("imageFile"), addNewImg)
-indexRouter.route('/add-existing-img').post(addExistingImg)
+indexRouter.route('/add-existing-img').post(upload.single("imageFile"), addExistingImg)
 indexRouter.route('add')
 
 

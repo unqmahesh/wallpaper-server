@@ -5,9 +5,12 @@ const addExistingImg = async (req, res, next) => {
 
     try{
 
-        const {imageId, base64Img, height, width} = req.body
+      
+        const {image_id, height, width} = req.body
 
-        const existedImage = await ImageModel.findOne({imageId})
+
+        const existedImage = await ImageModel.findOne({_id : image_id})
+ 
 
         if(!existedImage){
             const err = new Error()
@@ -18,10 +21,13 @@ const addExistingImg = async (req, res, next) => {
             next(err)
         }
 
-        const response = await cdUploadImg(base64Img)
+        const response = await cdUploadImg()
 
-        const url = response.data.data.url
-        const publicId = response.data.data.public_id
+    
+        console.log(response)
+        const url = response.url
+        const publicId = response.public_id
+
 
         const imgData = {
                 url,
@@ -29,14 +35,16 @@ const addExistingImg = async (req, res, next) => {
                 height, 
                 width
         }
-        
+
         const updatedData = await ImageModel.findOneAndUpdate(
-            {imageId},
+            {_id : image_id},
             {$push : {imageResolutions : imgData}}, {new : true})
+
 
         res.status(200).json({success : true, data : updatedData})
 
     }catch(error){
+
         const err = new Error()
         err.name = error.name || null
         err.message = error.message || null
@@ -47,3 +55,4 @@ const addExistingImg = async (req, res, next) => {
 } 
 
 export default addExistingImg
+
